@@ -1,9 +1,11 @@
 package com.example.virginia.mybakingapp;
 
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.virginia.mybakingapp.dummy.DummyContent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
@@ -35,7 +38,7 @@ public class RecipeListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
-
+    private ArrayList<Recipe> Recipes;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +62,15 @@ public class RecipeListActivity extends AppCompatActivity {
         View recyclerView = findViewById(R.id.recipe_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
-        RecipeViewModel recipeViewModel=new RecipeViewModel();
+        final RecipeViewModel recipeViewModel=new RecipeViewModel();
+        recipeViewModel.getRecipes().observe(this, new Observer<ArrayList<Recipe>>() {
+            @Override
+            public void onChanged(@Nullable ArrayList<Recipe> recipes) {
+                //Update the UI
+                Recipes=recipeViewModel.getRecipes().getValue();
+            }
+        });
+
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {

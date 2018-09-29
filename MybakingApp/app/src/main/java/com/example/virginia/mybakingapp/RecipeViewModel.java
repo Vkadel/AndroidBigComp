@@ -1,5 +1,6 @@
 package com.example.virginia.mybakingapp;
 
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -18,44 +19,53 @@ import okhttp3.Request;
 import okhttp3.Response;
 import timber.log.Timber;
 
-public class RecipeViewModel extends ViewModel{
-    ArrayList<Recipe> myRecipies;
+public class RecipeViewModel extends ViewModel {
+    private MutableLiveData<ArrayList<Recipe>> myRecipies;
 
     public RecipeViewModel() {
         super();
-        new myCalltoGetdata().execute();
+
     }
-
-}
-
-class myCalltoGetdata extends AsyncTask<Long, Long, ArrayList<Recipe>> {
-    GetString getString;
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    @Override
-    protected ArrayList<Recipe> doInBackground(Long... longs) {
-        ArrayList<Recipe> myRecipesLil=new ArrayList<>();
-        getString=new GetString();
-        try {
-            getString.run("https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json");
-        } catch (IOException e) {
-            e.printStackTrace();
+    public MutableLiveData<ArrayList<Recipe>> getRecipes (){
+        if (myRecipies==null){
+            new myCalltoGetdata().execute();
         }
-        return myRecipesLil;
-
+        return myRecipies;
     }
 
-    @Override
-    protected void onPostExecute(ArrayList<Recipe> recipes) {
-        super.onPostExecute(recipes);
-        String myResponse=getString.getStringBack();
-        ConvertToJSON convertToJSON=new ConvertToJSON(myResponse);
-        ArrayList<Recipe> myRecipies = convertToJSON.getRecipes();
-        Timber.e(myResponse);
+    //Inner class to get the Recipes
+    class myCalltoGetdata extends AsyncTask<Long, Long, ArrayList<Recipe>> {
+        GetString getString;
+
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        @Override
+        protected ArrayList<Recipe> doInBackground(Long... longs) {
+            ArrayList<Recipe> myRecipesLil = new ArrayList<>();
+            getString = new GetString();
+            try {
+                getString.run("https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return myRecipesLil;
+
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Recipe> recipes) {
+            super.onPostExecute(recipes);
+            String myResponse = getString.getStringBack();
+            ConvertToJSON convertToJSON = new ConvertToJSON(myResponse);
+            ArrayList<Recipe> myRecipiesTransition = convertToJSON.getRecipes();
+            myRecipies.postValue(myRecipiesTransition);
+            Timber.e(myResponse);
+
+        }
 
     }
-
 }
+
+
 
 
 
