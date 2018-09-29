@@ -2,12 +2,12 @@ package com.example.virginia.mybakingapp;
 
 public class RecipeStep {
     int stepId;
-    String stepShortDesc;
-    String stepDesc;
-    String stepVidURL;
-    String stepThumburl;
+    String mstepShortDesc;
+    String mstepDesc;
+    String mstepVidURL;
+    String mstepThumburl;
 
-    public RecipeStep(){
+    public RecipeStep(int stepId,,){
 
     }
 }
