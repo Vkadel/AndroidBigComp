@@ -30,6 +30,6 @@
                 android:value="com.example.virginia.mybakingapp.RecipeListActivity" />
         </activity>
     </application>
-    //Permissions
+
     <uses-permission android:name="android.permission.INTERNET" />
     </manifest>
