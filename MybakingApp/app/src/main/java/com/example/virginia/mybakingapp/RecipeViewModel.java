@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.AsyncTaskLoader;
 
+import com.example.virginia.mybakingapp.Internet.ConvertToJSON;
 import com.example.virginia.mybakingapp.Internet.GetString;
 
 import java.io.IOException;
@@ -22,9 +23,7 @@ public class RecipeViewModel extends ViewModel{
 
     public RecipeViewModel() {
         super();
-
         new myCalltoGetdata().execute();
-
     }
 
 }
@@ -50,9 +49,11 @@ class myCalltoGetdata extends AsyncTask<Long, Long, ArrayList<Recipe>> {
     protected void onPostExecute(ArrayList<Recipe> recipes) {
         super.onPostExecute(recipes);
         String myResponse=getString.getStringBack();
+        ConvertToJSON convertToJSON=new ConvertToJSON(myResponse);
+        ArrayList<Recipe> myRecipies = convertToJSON.getRecipes();
         Timber.e(myResponse);
-    }
 
+    }
 
 }
 

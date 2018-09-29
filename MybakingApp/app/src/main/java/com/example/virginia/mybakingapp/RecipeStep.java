@@ -1,57 +1,57 @@
 package com.example.virginia.mybakingapp;
 
 public class RecipeStep {
-    private int mstepId;
-    private String mstepShortDesc;
-    private String mstepDesc;
-    private String mstepVidURL;
-    private String mstepThumburl;
+    private int id;
+    private String shortDescription;
+    private String description;
+    private String videoURL;
+    private String thumbnailURL;
 
     public RecipeStep(int stepId,String stepShortDesc,String stepDesc,String stepVidURL,String stepThumburl){
-        mstepId=stepId;
-        mstepShortDesc=stepShortDesc;
-        mstepDesc=stepDesc;
-        mstepVidURL=stepVidURL;
-        mstepThumburl=stepThumburl;
+        id =stepId;
+        shortDescription =stepShortDesc;
+        description =stepDesc;
+        videoURL =stepVidURL;
+        thumbnailURL =stepThumburl;
     }
 
-    public void setMstepDesc(String mstepDesc) {
-        this.mstepDesc = mstepDesc;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setMstepId(int mstepId) {
-        this.mstepId = mstepId;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setMstepShortDesc(String mstepShortDesc) {
-        this.mstepShortDesc = mstepShortDesc;
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
     }
 
-    public void setMstepThumburl(String mstepThumburl) {
-        this.mstepThumburl = mstepThumburl;
+    public void setThumbnailURL(String thumbnailURL) {
+        this.thumbnailURL = thumbnailURL;
     }
 
-    public void setMstepVidURL(String mstepVidURL) {
-        this.mstepVidURL = mstepVidURL;
+    public void setVideoURL(String videoURL) {
+        this.videoURL = videoURL;
     }
 
-    public int getMstepId() {
-        return mstepId;
+    public int getId() {
+        return id;
     }
 
-    public String getMstepDesc() {
-        return mstepDesc;
+    public String getDescription() {
+        return description;
     }
 
-    public String getMstepShortDesc() {
-        return mstepShortDesc;
+    public String getShortDescription() {
+        return shortDescription;
     }
 
-    public String getMstepThumburl() {
-        return mstepThumburl;
+    public String getThumbnailURL() {
+        return thumbnailURL;
     }
 
-    public String getMstepVidURL() {
-        return mstepVidURL;
+    public String getVideoURL() {
+        return videoURL;
     }
 }

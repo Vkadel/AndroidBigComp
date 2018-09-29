@@ -3,58 +3,69 @@ package com.example.virginia.mybakingapp;
 import java.util.ArrayList;
 
 public class Recipe {
-    String mrecipeid;
-    String mrecipeName;
-    String mrecipeServings;
-    ArrayList<RecipeStep> mrecipeSteps;
-    ArrayList<RecipeIngredient> mrecipeIngredients;
+    String id;
+    String name;
+    String servings;
+    ArrayList<RecipeStep> steps;
+    ArrayList<RecipeIngredient> ingredients;
+    String image;
 
     public Recipe(String recipeid,String recipeServings,String recipeName,
-                  ArrayList<RecipeStep> recipeSteps,ArrayList<RecipeIngredient> recipeIngredients) {
-        mrecipeid=recipeid;
-        mrecipeName=recipeName;
-        mrecipeServings=recipeServings;
-        mrecipeSteps=recipeSteps;
-        mrecipeIngredients=recipeIngredients;
+                  ArrayList<RecipeStep> recipeSteps,
+                  ArrayList<RecipeIngredient> recipeIngredients,String imageurl) {
+        id =recipeid;
+        name =recipeName;
+        servings =recipeServings;
+        steps =recipeSteps;
+        ingredients =recipeIngredients;
+        image=imageurl;
     }
 
-    public void setMrecipeid(String mrecipeid) {
-        this.mrecipeid = mrecipeid;
+    public String getImage() {
+        return image;
     }
 
-    public void setMrecipeIngredients(ArrayList<RecipeIngredient> mrecipeIngredients) {
-        this.mrecipeIngredients = mrecipeIngredients;
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    public void setMrecipeName(String mrecipeName) {
-        this.mrecipeName = mrecipeName;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setMrecipeServings(String mrecipeServings) {
-        this.mrecipeServings = mrecipeServings;
+    public void setIngredients(ArrayList<RecipeIngredient> ingredients) {
+        this.ingredients = ingredients;
     }
 
-    public void setMrecipeSteps(ArrayList<RecipeStep> mrecipeSteps) {
-        this.mrecipeSteps = mrecipeSteps;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getMrecipeServings() {
-        return mrecipeServings;
+    public void setServings(String servings) {
+        this.servings = servings;
     }
 
-    public ArrayList<RecipeIngredient> getMrecipeIngredients() {
-        return mrecipeIngredients;
+    public void setSteps(ArrayList<RecipeStep> steps) {
+        this.steps = steps;
     }
 
-    public ArrayList<RecipeStep> getMrecipeSteps() {
-        return mrecipeSteps;
+    public String getServings() {
+        return servings;
     }
 
-    public String getMrecipeid() {
-        return mrecipeid;
+    public ArrayList<RecipeIngredient> getIngredients() {
+        return ingredients;
     }
 
-    public String getMrecipeName() {
-        return mrecipeName;
+    public ArrayList<RecipeStep> getSteps() {
+        return steps;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
     }
 }
