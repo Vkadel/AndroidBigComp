@@ -1,6 +1,9 @@
 package com.example.virginia.mybakingapp;
 
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
+import android.arch.lifecycle.ViewModelStore;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -62,12 +65,14 @@ public class RecipeListActivity extends AppCompatActivity {
         View recyclerView = findViewById(R.id.recipe_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
-        final RecipeViewModel recipeViewModel=new RecipeViewModel();
-        recipeViewModel.getRecipes().observe(this, new Observer<ArrayList<Recipe>>() {
+        RecipeViewModel model=ViewModelProviders
+                .of(this).get(RecipeViewModel.class);
+
+        model.getRecipes().observe(this, new Observer<ArrayList<Recipe>>() {
             @Override
             public void onChanged(@Nullable ArrayList<Recipe> recipes) {
-                //Update the UI
-                Recipes=recipeViewModel.getRecipes().getValue();
+                Recipes=recipes;
+                Timber.e("I got the power!");
             }
         });
 

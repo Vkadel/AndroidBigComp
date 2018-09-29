@@ -1,5 +1,6 @@
 package com.example.virginia.mybakingapp;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.os.AsyncTask;
@@ -20,17 +21,21 @@ import okhttp3.Response;
 import timber.log.Timber;
 
 public class RecipeViewModel extends ViewModel {
-    private MutableLiveData<ArrayList<Recipe>> myRecipies;
+    private MutableLiveData<ArrayList<Recipe>> myRecipiesLive;
 
     public RecipeViewModel() {
         super();
-
-    }
-    public MutableLiveData<ArrayList<Recipe>> getRecipes (){
-        if (myRecipies==null){
+        if (myRecipiesLive==null){
             new myCalltoGetdata().execute();
         }
-        return myRecipies;
+
+    }
+    public LiveData<ArrayList<Recipe>> getRecipes (){
+        if (myRecipiesLive==null){
+            myRecipiesLive=new MutableLiveData<>();
+
+        }
+        return myRecipiesLive;
     }
 
     //Inner class to get the Recipes
@@ -57,7 +62,7 @@ public class RecipeViewModel extends ViewModel {
             String myResponse = getString.getStringBack();
             ConvertToJSON convertToJSON = new ConvertToJSON(myResponse);
             ArrayList<Recipe> myRecipiesTransition = convertToJSON.getRecipes();
-            myRecipies.postValue(myRecipiesTransition);
+            myRecipiesLive.postValue(myRecipiesTransition);
             Timber.e(myResponse);
 
         }
