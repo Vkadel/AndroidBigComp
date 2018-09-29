@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">My Baking App</string>
+    <string name="myrecipename">MyrecipeName</string>
+    <string name="my_recipes">My Recipes</string>
+    <string name="my_recipe_name_tag">Recipe Name: </string>
+    <string name="my_recipe_servings_tag">Servings:</string>
+    <string name="my_recipe_servings">Recipe Servings</string>
+    <string name="title_recipe_list">Recipe</string>
+    <string name="title_recipe_detail"></string>
+    <string name="loading_your_recipes">Loading your \n recipes</string>
+    <string name="NO_internet">Opps no internet! \nCheck your Network settings \nClose the app and try again later </string>
+    <string name="this_ingredients_serve">These ingredients will be enough for</string>
+    <string name="servings_word">servings:</string>
+    <string name="measure_word">Measure: </string>
+    <string name="Recipe_Instructions">Recipe Instructions</string>
+</resources>
