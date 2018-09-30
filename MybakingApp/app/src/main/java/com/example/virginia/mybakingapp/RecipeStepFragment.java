@@ -1,21 +1,16 @@
 package com.example.virginia.mybakingapp;
 
 import android.app.Activity;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.virginia.mybakingapp.dummy.DummyContent;
-
 import java.util.ArrayList;
-import java.util.Observer;
 
 /**
  * A fragment representing a single Recipe detail screen.
@@ -23,25 +18,29 @@ import java.util.Observer;
  * in two-pane mode (on tablets) or a {@link RecipeDetailActivity}
  * on handsets.
  */
-public class RecipeDetailFragment extends Fragment {
+public class RecipeStepFragment extends Fragment {
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARG_STEP_ID = "item_id";
     public static final String ARG_ITEMS="items";
 
     /**
      * The dummy content this fragment is presenting.
      */
-    private Recipe mItem;
-    private ArrayList<Recipe> Recipes;
+
+    private ArrayList<Recipe> recipes;
+
     private CollapsingToolbarLayout appBarLayout;
+    private String stepId;
+    private String itemId;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public RecipeDetailFragment() {
+    public RecipeStepFragment() {
     }
     RecipeViewModel viewModel;
     @Override
@@ -55,10 +54,9 @@ public class RecipeDetailFragment extends Fragment {
 
             Activity activity = this.getActivity();
             appBarLayout= (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-
-
+            itemId=getArguments().getString(ARG_ITEM_ID);
+            stepId=getArguments().getString(ARG_STEP_ID);
             viewModel=ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
-            Recipes= viewModel.getRecipes().getValue();
 
         }
 
@@ -70,16 +68,16 @@ public class RecipeDetailFragment extends Fragment {
 
         //Only get the recipe and set the Views if the system has data
 
-            mItem = Recipes.get(Integer.parseInt(getArguments().getString(ARG_ITEM_ID))-1);
+            Recipe recipe=viewModel.getRecipes().getValue().get(Integer.parseInt(itemId)-1);
+            ArrayList<RecipeStep> recipeStepserecipeSteps = recipe.getSteps();
             //Add the name to the AppBar
             if (appBarLayout != null) {
-                appBarLayout.setTitle(mItem.getName());
+                appBarLayout.setTitle(recipe.getName());
             }
-            View rootView = inflater.inflate(R.layout.recipe_detail, container, false);
+            View rootView = inflater.inflate(R.layout.step_list, container, false);
 
             // Show the dummy content as text in a TextView.
-            if (mItem != null) {
-                ((TextView) rootView.findViewById(R.id.recipe_detail_ingredients)).setText(mItem.servings);
+            if (recipe != null) {
 
             }
 

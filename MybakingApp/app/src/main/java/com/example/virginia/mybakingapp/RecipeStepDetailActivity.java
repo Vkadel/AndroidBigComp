@@ -7,14 +7,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -27,10 +27,8 @@ import java.util.ArrayList;
  * in a {@link RecipeListActivity}.
  */
 
-public class RecipeDetailActivity extends AppCompatActivity {
-    private boolean mTwoPane=false;
+public class RecipeStepDetailActivity extends AppCompatActivity {
 
-String thisItemID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,68 +36,39 @@ String thisItemID;
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
-        //TODO redo container for double pane
-        /*if (findViewById(R.id.recipe_steps_list_container) != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-w900dp).
-            // If this view is present, then the
-            // activity should be in two-pane mode.
-            mTwoPane = true;
-        }*/
-
-        final View recyclerView = findViewById(R.id.step_list);
-        thisItemID=getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID);
-        final Bundle savedInstanceStateFinal = savedInstanceState;
+       final Bundle savedInstanceStateFinal=savedInstanceState;
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        // savedInstanceState is non-null when there is fragment state
-        // saved from previous configurations of this activity
-        // (e.g. when rotating the screen from portrait to landscape).
-        // In this case, the fragment will automatically be re-added
-        // to its container so we don't need to manually add it.
-        // For more information, see the Fragments API guide at:
-        //
-        // http://developer.android.com/guide/components/fragments.html
-        //
-        //Preparing the data
-        RecipeViewModel viewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+        RecipeViewModel viewModel=ViewModelProviders.of(this).get(RecipeViewModel.class);
         viewModel.getRecipes().observe(this, new Observer<ArrayList<Recipe>>() {
             @Override
             public void onChanged(@Nullable ArrayList<Recipe> recipes) {
                 //Create and update Fragment
-                RecipeDetailFragment fragment = new RecipeDetailFragment();
-                RecipeStepFragment fragmentSteps = new RecipeStepFragment();
-
-                final View recyclerView = findViewById(R.id.step_list);
-                if (savedInstanceStateFinal == null) {
+                RecipeStepFragment fragment = new RecipeStepFragment();
+                RecipeDetailFragment fragmentDetail=new RecipeDetailFragment();
+                    if (savedInstanceStateFinal==null){
                     // Create the detail fragment and add it to the activity
                     // using a fragment transaction.
-
                     Bundle arguments = new Bundle();
-                    arguments.putString(RecipeDetailFragment.ARG_ITEM_ID,
+                    arguments.putString(RecipeStepFragment.ARG_ITEM_ID,
                             getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID));
-                    fragmentSteps.setArguments(arguments);
-
+                        arguments.putString(RecipeStepFragment.ARG_STEP_ID,
+                                getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID));
                     fragment.setArguments(arguments);
                     getSupportFragmentManager().beginTransaction()
                             .add(R.id.recipe_detail_container, fragment)
                             .commit();
+                    fragmentDetail.setArguments(arguments);
                     getSupportFragmentManager().beginTransaction()
-                            .add(R.id.step_detail_container,fragmentSteps).commit();
+                            .add(R.id.recipe_detail_container,fragment)
+                            .commit();
+                    }
 
-                    assert recyclerView != null;
-                    setupRecyclerView((RecyclerView) recyclerView,recipes.get(Integer.parseInt(thisItemID)-1).getSteps());
-
-                }
-
-
-            }
-
-
+                            }
         });
 
     }
@@ -122,69 +91,54 @@ String thisItemID;
     }
 
 
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView, ArrayList<RecipeStep> Recipes) {
-        recyclerView.setAdapter(new RecipeDetailActivity.SimpleItemRecyclerViewAdapter(this, Recipes, mTwoPane));
+    private void setupRecyclerView(@NonNull RecyclerView recyclerView, ArrayList<RecipeStep> RecipeSteps) {
+        recyclerView.setAdapter(new RecipeStepDetailActivity.SimpleItemRecyclerViewAdapter(this, RecipeSteps));
     }
 
     public static class SimpleItemRecyclerViewAdapter
-            extends RecyclerView.Adapter<RecipeDetailActivity.SimpleItemRecyclerViewAdapter.ViewHolder> {
+            extends RecyclerView.Adapter<RecipeStepDetailActivity.SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final RecipeDetailActivity mParentActivity;
+        private final RecipeStepDetailActivity mParentActivity;
         private final ArrayList<RecipeStep> mValues;
-        private final boolean mTwoPane;
+
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RecipeStep item = mValues.get(Integer.parseInt(view.getTag().toString()) - 1);
-                if (mTwoPane) {
-                    Bundle arguments = new Bundle();
-                    arguments.putString(RecipeStepFragment.ARG_ITEM_ID, item.getId());
-                    arguments.putString(RecipeStepFragment.ARG_STEP_ID, item.getId());
-                    RecipeStepFragment fragment = new RecipeStepFragment();
-                    fragment.setArguments(arguments);
-                    mParentActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.recipe_step_container, fragment)
-                            .commit();
-                } else {
+                RecipeStep item = mValues.get(Integer.parseInt(view.getTag().toString())-1);
+                    //TODO CREATE INTENT FOR VIDEO Screen
                     Context context = view.getContext();
-                    Intent intent = new Intent(context, RecipeDetailActivity.class);
+                    Intent intent = new Intent(context, RecipeStepDetailActivity.class);
                     intent.putExtra(RecipeStepFragment.ARG_ITEM_ID, item.getId());
-                    intent.putExtra(RecipeStepFragment.ARG_STEP_ID, item.getId());
                     context.startActivity(intent);
-                }
             }
         };
 
-        SimpleItemRecyclerViewAdapter(RecipeDetailActivity parent,
-                                      ArrayList<RecipeStep> items,
-                                      boolean twoPane) {
+        SimpleItemRecyclerViewAdapter(RecipeStepDetailActivity parent,
+                                      ArrayList<RecipeStep> items) {
             mValues = items;
             mParentActivity = parent;
-            mTwoPane = twoPane;
         }
 
         @Override
-        public RecipeDetailActivity.SimpleItemRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public RecipeStepDetailActivity.SimpleItemRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.step_list_item, parent, false);
-            return new RecipeDetailActivity.SimpleItemRecyclerViewAdapter.ViewHolder(view);
+                    .inflate(R.layout.recipe_list_item, parent, false);
+            return new RecipeStepDetailActivity.SimpleItemRecyclerViewAdapter.ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(final RecipeDetailActivity.SimpleItemRecyclerViewAdapter.ViewHolder holder, int position) {
+        public void onBindViewHolder(final RecipeStepDetailActivity.SimpleItemRecyclerViewAdapter.ViewHolder holder, int position) {
             holder.mDescription.setText(mValues.get(position).getDescription());
             holder.mShortDescription.setText(mValues.get(position).getShortDescription());
+
             holder.itemView.setTag(mValues.get(position).getId());
             holder.itemView.setOnClickListener(mOnClickListener);
         }
 
         @Override
         public int getItemCount() {
-            if (mValues == null) {
-                return 0;
-            } else {
-                return mValues.size();
-            }
+            if(mValues==null){return 0;}
+            else{return mValues.size();}
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {

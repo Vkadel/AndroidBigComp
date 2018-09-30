@@ -1,13 +1,13 @@
 package com.example.virginia.mybakingapp;
 
 public class RecipeStep {
-    private int id;
+    private String id;
     private String shortDescription;
     private String description;
     private String videoURL;
     private String thumbnailURL;
 
-    public RecipeStep(int stepId,String stepShortDesc,String stepDesc,String stepVidURL,String stepThumbnail){
+    public RecipeStep(String stepId,String stepShortDesc,String stepDesc,String stepVidURL,String stepThumbnail){
         id =stepId;
         shortDescription =stepShortDesc;
         description =stepDesc;
@@ -19,7 +19,7 @@ public class RecipeStep {
         this.description = description;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -35,7 +35,7 @@ public class RecipeStep {
         this.videoURL = videoURL;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
