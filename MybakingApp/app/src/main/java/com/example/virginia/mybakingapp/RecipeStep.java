@@ -7,12 +7,12 @@ public class RecipeStep {
     private String videoURL;
     private String thumbnailURL;
 
-    public RecipeStep(int stepId,String stepShortDesc,String stepDesc,String stepVidURL,String stepThumburl){
+    public RecipeStep(int stepId,String stepShortDesc,String stepDesc,String stepVidURL,String stepThumbnail){
         id =stepId;
         shortDescription =stepShortDesc;
         description =stepDesc;
         videoURL =stepVidURL;
-        thumbnailURL =stepThumburl;
+        thumbnailURL =stepThumbnail;
     }
 
     public void setDescription(String description) {

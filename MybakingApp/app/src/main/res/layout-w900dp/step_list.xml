@@ -4,28 +4,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
     android:baselineAligned="false"
     android:divider="?android:attr/dividerHorizontal"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:showDividers="middle"
-    tools:context=".RecipeListActivity">
+    tools:context=".RecipeDetailActivity">
 
     <!--
     This layout is a two-pane layout for the Recipes
     master/detail flow.
-    
+
     -->
 
     <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/recipe_list"
         android:name="com.example.virginia.mybakingapp.RecipeListFragment"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        app:layoutManager="android.support.v7.widget.GridLayoutManager"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        app:layoutManager="LinearLayoutManager"
         tools:context="com.example.virginia.mybakingapp.RecipeListActivity"
         tools:listitem="@layout/recipe_list_item"
         app:spanCount="4"/>
 
+    <FrameLayout
+         android:id="@+id/recipe_detail_container"
+         android:layout_width="0dp"
+         android:layout_height="match_parent"
+         android:layout_weight="3" />
 
 </LinearLayout>

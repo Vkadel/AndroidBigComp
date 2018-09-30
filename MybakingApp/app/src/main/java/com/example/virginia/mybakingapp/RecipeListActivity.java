@@ -1,9 +1,7 @@
 package com.example.virginia.mybakingapp;
 
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.arch.lifecycle.ViewModelStore;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,17 +10,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.virginia.mybakingapp.dummy.DummyContent;
-
 import java.util.ArrayList;
-import java.util.List;
 
 import timber.log.Timber;
 
@@ -62,9 +55,9 @@ public class RecipeListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-        View recyclerView = findViewById(R.id.recipe_list);
+        final View recyclerView = findViewById(R.id.recipe_list);
         assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+        //setupRecyclerView((RecyclerView) recyclerView);
         RecipeViewModel model=ViewModelProviders
                 .of(this).get(RecipeViewModel.class);
 
@@ -73,25 +66,29 @@ public class RecipeListActivity extends AppCompatActivity {
             public void onChanged(@Nullable ArrayList<Recipe> recipes) {
                 Recipes=recipes;
                 Timber.e("I got the power!");
+                assert recyclerView != null;
+                setupRecyclerView((RecyclerView) recyclerView,recipes);
+
             }
         });
 
     }
 
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
+
+    private void setupRecyclerView(@NonNull RecyclerView recyclerView,ArrayList<Recipe> Recipes) {
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, Recipes, mTwoPane));
     }
 
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final RecipeListActivity mParentActivity;
-        private final List<DummyContent.DummyItem> mValues;
+        private final ArrayList<Recipe> mValues;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
+                Recipe item = mValues.get(Integer.parseInt(view.getTag().toString())-1);
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
                     arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, item.id);
@@ -111,7 +108,7 @@ public class RecipeListActivity extends AppCompatActivity {
         };
 
         SimpleItemRecyclerViewAdapter(RecipeListActivity parent,
-                                      List<DummyContent.DummyItem> items,
+                                      ArrayList<Recipe> items,
                                       boolean twoPane) {
             mValues = items;
             mParentActivity = parent;
@@ -121,32 +118,33 @@ public class RecipeListActivity extends AppCompatActivity {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.recipe_list_content, parent, false);
+                    .inflate(R.layout.recipe_list_item, parent, false);
             return new ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).content);
+            holder.mIdView.setText(mValues.get(position).name);
+            holder.mServings.setText(mValues.get(position).servings);
 
-            holder.itemView.setTag(mValues.get(position));
+            holder.itemView.setTag(mValues.get(position).id);
             holder.itemView.setOnClickListener(mOnClickListener);
         }
 
         @Override
         public int getItemCount() {
-            return mValues.size();
+            if(mValues==null){return 0;}
+            else{return mValues.size();}
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
             final TextView mIdView;
-            final TextView mContentView;
+            final TextView mServings;
 
             ViewHolder(View view) {
                 super(view);
-                mIdView = (TextView) view.findViewById(R.id.id_text);
-                mContentView = (TextView) view.findViewById(R.id.content);
+                mIdView = (TextView) view.findViewById(R.id.tv_recipe_name);
+                mServings = (TextView) view.findViewById(R.id.tv_recipe_servings);
             }
         }
     }

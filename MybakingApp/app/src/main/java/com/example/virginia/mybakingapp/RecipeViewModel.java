@@ -63,7 +63,7 @@ public class RecipeViewModel extends ViewModel {
             ConvertToJSON convertToJSON = new ConvertToJSON(myResponse);
             ArrayList<Recipe> myRecipiesTransition = convertToJSON.getRecipes();
             myRecipiesLive.postValue(myRecipiesTransition);
-            Timber.e(myResponse);
+            Timber.d(myResponse);
 
         }
 
