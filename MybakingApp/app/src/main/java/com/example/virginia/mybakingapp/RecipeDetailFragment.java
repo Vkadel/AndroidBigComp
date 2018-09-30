@@ -30,7 +30,7 @@ public class RecipeDetailFragment extends Fragment {
      */
     public static final String ARG_ITEM_ID = "item_id";
     public static final String ARG_ITEMS="items";
-
+    public static final String FIRST_STEP = "0";
     /**
      * The dummy content this fragment is presenting.
      */

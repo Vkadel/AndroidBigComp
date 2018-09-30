@@ -48,15 +48,15 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable ArrayList<Recipe> recipes) {
                 //Create and update Fragment
-                RecipeStepFragment fragment = new RecipeStepFragment();
+                RecipeStepsListFragment fragment = new RecipeStepsListFragment();
                 RecipeDetailFragment fragmentDetail=new RecipeDetailFragment();
                     if (savedInstanceStateFinal==null){
                     // Create the detail fragment and add it to the activity
                     // using a fragment transaction.
                     Bundle arguments = new Bundle();
-                    arguments.putString(RecipeStepFragment.ARG_ITEM_ID,
+                    arguments.putString(RecipeStepsListFragment.ARG_ITEM_ID,
                             getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID));
-                        arguments.putString(RecipeStepFragment.ARG_STEP_ID,
+                        arguments.putString(RecipeStepsListFragment.ARG_STEP_ID,
                                 getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID));
                     fragment.setArguments(arguments);
                     getSupportFragmentManager().beginTransaction()
@@ -108,7 +108,7 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
                     //TODO CREATE INTENT FOR VIDEO Screen
                     Context context = view.getContext();
                     Intent intent = new Intent(context, RecipeStepDetailActivity.class);
-                    intent.putExtra(RecipeStepFragment.ARG_ITEM_ID, item.getId());
+                    intent.putExtra(RecipeStepsListFragment.ARG_ITEM_ID, item.getId());
                     context.startActivity(intent);
             }
         };
@@ -128,7 +128,7 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final RecipeStepDetailActivity.SimpleItemRecyclerViewAdapter.ViewHolder holder, int position) {
-            holder.mDescription.setText(mValues.get(position).getDescription());
+
             holder.mShortDescription.setText(mValues.get(position).getShortDescription());
 
             holder.itemView.setTag(mValues.get(position).getId());
@@ -142,12 +142,12 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            final TextView mDescription;
+
             final TextView mShortDescription;
 
             ViewHolder(View view) {
                 super(view);
-                mDescription = (TextView) view.findViewById(R.id.description);
+
                 mShortDescription = (TextView) view.findViewById(R.id.short_description);
             }
         }

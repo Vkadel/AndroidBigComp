@@ -5,16 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:baselineAligned="false"
-    android:divider="?android:attr/dividerHorizontal"
     android:orientation="vertical"
-    android:showDividers="middle"
     tools:context=".RecipeListActivity">
 
-    <!--
-    This layout is a two-pane layout for the Recipes
-    master/detail flow.
-    
-    -->
 
     <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"

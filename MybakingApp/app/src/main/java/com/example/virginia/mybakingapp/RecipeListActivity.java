@@ -46,14 +46,14 @@ public class RecipeListActivity extends AppCompatActivity {
 
         //Planting a Tree
         Timber.plant(new Timber.DebugTree());
-
-        if (findViewById(R.id.recipe_detail_container) != null) {
+        //TODO delete get double pane
+        /*if (findViewById(R.id.recipe_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
             // If this view is present, then the
             // activity should be in two-pane mode.
             mTwoPane = true;
-        }
+        }*/
 
         final View recyclerView = findViewById(R.id.recipe_list);
         assert recyclerView != null;
@@ -89,21 +89,11 @@ public class RecipeListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Recipe item = mValues.get(Integer.parseInt(view.getTag().toString())-1);
-                if (mTwoPane) {
-                    Bundle arguments = new Bundle();
-                    arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, item.id);
-                    RecipeDetailFragment fragment = new RecipeDetailFragment();
-                    fragment.setArguments(arguments);
-                    mParentActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.recipe_detail_container, fragment)
-                            .commit();
-                } else {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, RecipeDetailActivity.class);
                     intent.putExtra(RecipeDetailFragment.ARG_ITEM_ID, item.id);
-
                     context.startActivity(intent);
-                }
+
             }
         };
 

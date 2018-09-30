@@ -4,33 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
     android:baselineAligned="false"
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
     android:showDividers="middle"
-    tools:context=".RecipeDetailActivity">
+    tools:context=".ItemListActivity">
 
+    <!--
+    This layout is a two-pane layout for the Items
+    master/detail flow.
+    
+    -->
 
     <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/step_list"
-        android:name="com.example.virginia.mybakingapp.RecipeStepFragment"
+        android:id="@+id/item_list"
+        android:name="com.example.virginia.masterslave.ItemListFragment"
         android:layout_width="@dimen/item_width"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        app:layoutManager="android.support.v7.widget.GridLayoutManager"
-        app:spanCount="1"
-        tools:context="com.example.virginia.mybakingapp.RecipeListActivity"
-        tools:listitem="@layout/step_list_item">
-
-    </android.support.v7.widget.RecyclerView>
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        app:layoutManager="LinearLayoutManager"
+        tools:context="com.example.virginia.masterslave.ItemListActivity"
+        tools:listitem="@layout/item_list_content" />
 
     <FrameLayout
-        android:id="@+id/step_frame_container"
-        android:layout_width="600dp"
-        android:layout_height="match_parent">
-
-    </FrameLayout>
-
+        android:id="@+id/item_detail_container"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3" />
 
 </LinearLayout>

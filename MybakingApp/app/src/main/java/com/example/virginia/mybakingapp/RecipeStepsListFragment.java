@@ -18,13 +18,13 @@ import java.util.ArrayList;
  * in two-pane mode (on tablets) or a {@link RecipeDetailActivity}
  * on handsets.
  */
-public class RecipeStepFragment extends Fragment {
+public class RecipeStepsListFragment extends Fragment {
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
-    public static final String ARG_STEP_ID = "item_id";
+    public static final String ARG_STEP_ID = "step_id";
     public static final String ARG_ITEMS="items";
 
     /**
@@ -40,14 +40,14 @@ public class RecipeStepFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public RecipeStepFragment() {
+    public RecipeStepsListFragment() {
     }
     RecipeViewModel viewModel;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
+        if (getArguments().containsKey(ARG_STEP_ID)) {
             // Load the content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
@@ -74,11 +74,13 @@ public class RecipeStepFragment extends Fragment {
             if (appBarLayout != null) {
                 appBarLayout.setTitle(recipe.getName());
             }
-            View rootView = inflater.inflate(R.layout.step_list, container, false);
+            View rootView = inflater.inflate(R.layout.step_detail, container, false);
 
             // Show the dummy content as text in a TextView.
             if (recipe != null) {
-
+                TextView myLongDescription=((TextView) rootView.findViewById(R.id.tv_step_description_intwopane));
+                myLongDescription
+                        .setText(recipeStepserecipeSteps.get(Integer.parseInt(stepId)-1).getDescription());
             }
 
         return rootView;

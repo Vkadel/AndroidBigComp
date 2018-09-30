@@ -28,9 +28,10 @@ import java.util.ArrayList;
  */
 
 public class RecipeDetailActivity extends AppCompatActivity {
-    private boolean mTwoPane=false;
+    private boolean mTwoPane = false;
 
-String thisItemID;
+    static String thisItemID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,17 +39,17 @@ String thisItemID;
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
-        //TODO redo container for double pane
-        /*if (findViewById(R.id.recipe_steps_list_container) != null) {
+
+        if (findViewById(R.id.step_frame_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
             // If this view is present, then the
             // activity should be in two-pane mode.
             mTwoPane = true;
-        }*/
+        }
 
         final View recyclerView = findViewById(R.id.step_list);
-        thisItemID=getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID);
+        thisItemID = getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID);
         final Bundle savedInstanceStateFinal = savedInstanceState;
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
@@ -70,31 +71,34 @@ String thisItemID;
         viewModel.getRecipes().observe(this, new Observer<ArrayList<Recipe>>() {
             @Override
             public void onChanged(@Nullable ArrayList<Recipe> recipes) {
-                //Create and update Fragment
-                RecipeDetailFragment fragment = new RecipeDetailFragment();
-                RecipeStepFragment fragmentSteps = new RecipeStepFragment();
 
-                final View recyclerView = findViewById(R.id.step_list);
                 if (savedInstanceStateFinal == null) {
                     // Create the detail fragment and add it to the activity
                     // using a fragment transaction.
-
+                    //Create and update Fragment
+                    RecipeDetailFragment fragment = new RecipeDetailFragment();
                     Bundle arguments = new Bundle();
-                    arguments.putString(RecipeDetailFragment.ARG_ITEM_ID,
-                            getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID));
-                    fragmentSteps.setArguments(arguments);
-
+                    arguments.putString(RecipeDetailFragment.ARG_ITEM_ID,thisItemID);
                     fragment.setArguments(arguments);
+
                     getSupportFragmentManager().beginTransaction()
                             .add(R.id.recipe_detail_container, fragment)
                             .commit();
-                    getSupportFragmentManager().beginTransaction()
-                            .add(R.id.step_detail_container,fragmentSteps).commit();
-
-                    assert recyclerView != null;
-                    setupRecyclerView((RecyclerView) recyclerView,recipes.get(Integer.parseInt(thisItemID)-1).getSteps());
-
+                    if (mTwoPane) {
+                        Bundle argumentsStep=new Bundle();
+                        RecipeStepsListFragment fragmentSteps = new RecipeStepsListFragment();
+                        argumentsStep.putString(RecipeStepsListFragment.ARG_ITEM_ID,thisItemID);
+                        argumentsStep.putString(RecipeStepsListFragment.ARG_STEP_ID, "1");
+                        fragmentSteps.setArguments(argumentsStep);
+                        getSupportFragmentManager().beginTransaction()
+                                .add(R.id.step_detail_container, fragmentSteps).commit();
+                    }
                 }
+                    final View recyclerView = findViewById(R.id.step_list);
+                    assert recyclerView != null;
+                    setupRecyclerView((RecyclerView) recyclerView, recipes.get(Integer.parseInt(thisItemID) - 1).getSteps());
+
+
 
 
             }
@@ -135,21 +139,22 @@ String thisItemID;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RecipeStep item = mValues.get(Integer.parseInt(view.getTag().toString()) - 1);
+
+                RecipeStep stepItem = mValues.get(Integer.parseInt(view.getTag().toString()) - 1);
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
-                    arguments.putString(RecipeStepFragment.ARG_ITEM_ID, item.getId());
-                    arguments.putString(RecipeStepFragment.ARG_STEP_ID, item.getId());
-                    RecipeStepFragment fragment = new RecipeStepFragment();
+                    arguments.putString(RecipeStepsListFragment.ARG_ITEM_ID, thisItemID);
+                    arguments.putString(RecipeStepsListFragment.ARG_STEP_ID,stepItem.getId());
+                    RecipeStepsListFragment fragment = new RecipeStepsListFragment();
                     fragment.setArguments(arguments);
                     mParentActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.recipe_step_container, fragment)
+                            .replace(R.id.step_detail_container, fragment)
                             .commit();
                 } else {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, RecipeDetailActivity.class);
-                    intent.putExtra(RecipeStepFragment.ARG_ITEM_ID, item.getId());
-                    intent.putExtra(RecipeStepFragment.ARG_STEP_ID, item.getId());
+                    intent.putExtra(RecipeStepsListFragment.ARG_ITEM_ID, thisItemID);
+                    intent.putExtra(RecipeStepsListFragment.ARG_STEP_ID, stepItem.getId());
                     context.startActivity(intent);
                 }
             }
@@ -161,6 +166,8 @@ String thisItemID;
             mValues = items;
             mParentActivity = parent;
             mTwoPane = twoPane;
+            //Deleting that first item that does not contain a step
+            mValues.remove(0);
         }
 
         @Override
@@ -172,7 +179,7 @@ String thisItemID;
 
         @Override
         public void onBindViewHolder(final RecipeDetailActivity.SimpleItemRecyclerViewAdapter.ViewHolder holder, int position) {
-            holder.mDescription.setText(mValues.get(position).getDescription());
+
             holder.mShortDescription.setText(mValues.get(position).getShortDescription());
             holder.itemView.setTag(mValues.get(position).getId());
             holder.itemView.setOnClickListener(mOnClickListener);
@@ -188,12 +195,11 @@ String thisItemID;
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            final TextView mDescription;
+
             final TextView mShortDescription;
 
             ViewHolder(View view) {
                 super(view);
-                mDescription = (TextView) view.findViewById(R.id.description);
                 mShortDescription = (TextView) view.findViewById(R.id.short_description);
             }
         }
