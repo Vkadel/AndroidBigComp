@@ -1,12 +1,14 @@
 package com.example.virginia.mybakingapp;
 
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -29,16 +31,16 @@ import java.util.ArrayList;
 
 public class RecipeDetailActivity extends AppCompatActivity {
     private boolean mTwoPane = false;
-
+    RecipeViewModel viewModel;
     static String thisItemID;
-
+    private CollapsingToolbarLayout appBarLayout;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
-
+        appBarLayout= (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
 
         if (findViewById(R.id.step_frame_container) != null) {
             // The detail container view will be present only in the
@@ -47,7 +49,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
-
+        final String addonText=getResources().getString(R.string.this_are_steps_for);
         final View recyclerView = findViewById(R.id.step_list);
         thisItemID = getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID);
         final Bundle savedInstanceStateFinal = savedInstanceState;
@@ -67,7 +69,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         // http://developer.android.com/guide/components/fragments.html
         //
         //Preparing the data
-        RecipeViewModel viewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+         viewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
         viewModel.getRecipes().observe(this, new Observer<ArrayList<Recipe>>() {
             @Override
             public void onChanged(@Nullable ArrayList<Recipe> recipes) {
@@ -80,6 +82,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
                     Bundle arguments = new Bundle();
                     arguments.putString(RecipeDetailFragment.ARG_ITEM_ID,thisItemID);
                     fragment.setArguments(arguments);
+                    //Removed the first Item in the Recipe
 
                     getSupportFragmentManager().beginTransaction()
                             .add(R.id.recipe_detail_container, fragment)
@@ -97,15 +100,27 @@ public class RecipeDetailActivity extends AppCompatActivity {
                     final View recyclerView = findViewById(R.id.step_list);
                     assert recyclerView != null;
                     setupRecyclerView((RecyclerView) recyclerView, recipes.get(Integer.parseInt(thisItemID) - 1).getSteps());
-
-
-
+                if (appBarLayout != null) {
+                    appBarLayout.setTitle(addonText+" "+recipes.get(Integer.parseInt(thisItemID)-1).getName());
+                }
 
             }
 
 
         });
 
+    }
+
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        recreate();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -119,6 +134,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
+
             NavUtils.navigateUpTo(this, new Intent(this, RecipeListActivity.class));
             return true;
         }
@@ -140,11 +156,12 @@ public class RecipeDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                RecipeStep stepItem = mValues.get(Integer.parseInt(view.getTag().toString()) - 1);
+                RecipeStep stepItem = mValues.get(Integer.parseInt(view.getTag().toString()));
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
                     arguments.putString(RecipeStepsListFragment.ARG_ITEM_ID, thisItemID);
-                    arguments.putString(RecipeStepsListFragment.ARG_STEP_ID,stepItem.getId());
+                    String stepId=((Integer.parseInt(stepItem.getId()))+1)+"";
+                    arguments.putString(RecipeStepsListFragment.ARG_STEP_ID,stepId);
                     RecipeStepsListFragment fragment = new RecipeStepsListFragment();
                     fragment.setArguments(arguments);
                     mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -152,9 +169,10 @@ public class RecipeDetailActivity extends AppCompatActivity {
                             .commit();
                 } else {
                     Context context = view.getContext();
-                    Intent intent = new Intent(context, RecipeDetailActivity.class);
+                    Intent intent = new Intent(context, RecipeStepDetailActivity.class);
+                    String stepId=(Integer.parseInt(stepItem.getId())+1)+"";
                     intent.putExtra(RecipeStepsListFragment.ARG_ITEM_ID, thisItemID);
-                    intent.putExtra(RecipeStepsListFragment.ARG_STEP_ID, stepItem.getId());
+                    intent.putExtra(RecipeStepsListFragment.ARG_STEP_ID, stepId);
                     context.startActivity(intent);
                 }
             }
@@ -166,8 +184,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
             mValues = items;
             mParentActivity = parent;
             mTwoPane = twoPane;
-            //Deleting that first item that does not contain a step
-            mValues.remove(0);
+
         }
 
         @Override

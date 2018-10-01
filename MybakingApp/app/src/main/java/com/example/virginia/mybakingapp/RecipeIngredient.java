@@ -2,46 +2,46 @@ package com.example.virginia.mybakingapp;
 
 class RecipeIngredient {
     int mIngredientId;
-    double mIngredientQuantity;
-    String mIngredientMeasure;
-    String mIngredientName;
+    double quantity;
+    String measure;
+    String ingredient;
     public RecipeIngredient(int ingredientId, double ingredientQuantity,
                             String ingredientMeasure, String ingredientName){
         mIngredientId=ingredientId;
-        mIngredientQuantity=ingredientQuantity;
-        mIngredientMeasure=ingredientMeasure;
-        mIngredientName=ingredientName;
+        quantity =ingredientQuantity;
+        measure =ingredientMeasure;
+        ingredient =ingredientName;
     }
 
     public void setmIngredientId(int mIngredientId) {
         this.mIngredientId = mIngredientId;
     }
 
-    public void setmIngredientMeasure(String mIngredientMeasure) {
-        this.mIngredientMeasure = mIngredientMeasure;
+    public void setMeasure(String measure) {
+        this.measure = measure;
     }
 
-    public void setmIngredientName(String mIngredientName) {
-        this.mIngredientName = mIngredientName;
+    public void setIngredient(String ingredient) {
+        this.ingredient = ingredient;
     }
 
-    public void setmIngredientQuantity(int mIngredientQuantity) {
-        this.mIngredientQuantity = mIngredientQuantity;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public int getmIngredientId() {
         return mIngredientId;
     }
 
-    public double getmIngredientQuantity() {
-        return mIngredientQuantity;
+    public double getQuantity() {
+        return quantity;
     }
 
-    public String getmIngredientMeasure() {
-        return mIngredientMeasure;
+    public String getMeasure() {
+        return measure;
     }
 
-    public String getmIngredientName() {
-        return mIngredientName;
+    public String getIngredient() {
+        return ingredient;
     }
 }

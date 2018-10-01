@@ -79,8 +79,9 @@ public class RecipeStepsListFragment extends Fragment {
             // Show the dummy content as text in a TextView.
             if (recipe != null) {
                 TextView myLongDescription=((TextView) rootView.findViewById(R.id.tv_step_description_intwopane));
+                int stepIdint=Integer.parseInt(stepId)-1;
                 myLongDescription
-                        .setText(recipeStepserecipeSteps.get(Integer.parseInt(stepId)-1).getDescription());
+                        .setText(recipeStepserecipeSteps.get(stepIdint).getDescription());
             }
 
         return rootView;

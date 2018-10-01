@@ -29,6 +29,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.virginia.mybakingapp.RecipeListActivity" />
         </activity>
+        <activity
+            android:name=".RecipeStepDetailActivity"
+            android:label="@string/step_detail"
+            android:parentActivityName=".RecipeDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.virginia.mybakingapp.RecipeStepDetailActivity" />
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

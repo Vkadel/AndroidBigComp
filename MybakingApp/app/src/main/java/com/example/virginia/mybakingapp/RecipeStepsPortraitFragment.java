@@ -2,8 +2,10 @@ package com.example.virginia.mybakingapp;
 
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
-import android.support.design.widget.CollapsingToolbarLayout;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,32 +20,30 @@ import java.util.ArrayList;
  * in two-pane mode (on tablets) or a {@link RecipeDetailActivity}
  * on handsets.
  */
-public class RecipeDetailFragment extends Fragment {
+public class RecipeStepsPortraitFragment extends Fragment {
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARG_STEP_ID = "step_id";
     public static final String ARG_ITEMS="items";
-    public static final String FIRST_STEP = "0";
-    /**
-     * The dummy content this fragment is presenting.
-     */
-    private Recipe mItem;
-    private ArrayList<Recipe> Recipes;
+    private ArrayList<Recipe> recipes;
     private CollapsingToolbarLayout appBarLayout;
+    private String stepId;
+    private String itemId;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public RecipeDetailFragment() {
+    public RecipeStepsPortraitFragment() {
     }
     RecipeViewModel viewModel;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
+        if (getArguments().containsKey(ARG_STEP_ID)) {
             // Load the content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
@@ -51,9 +51,9 @@ public class RecipeDetailFragment extends Fragment {
             Activity activity = this.getActivity();
             appBarLayout= (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
 
-
+            itemId=getArguments().getString(ARG_ITEM_ID);
+            stepId=getArguments().getString(ARG_STEP_ID);
             viewModel=ViewModelProviders.of(getActivity()).get(RecipeViewModel.class);
-            Recipes= viewModel.getRecipes().getValue();
 
         }
 
@@ -65,31 +65,25 @@ public class RecipeDetailFragment extends Fragment {
 
         //Only get the recipe and set the Views if the system has data
 
-            mItem = Recipes.get(Integer.parseInt(getArguments().getString(ARG_ITEM_ID))-1);
+            Recipe recipe=viewModel.getRecipes().getValue().get(Integer.parseInt(itemId)-1);
+            ArrayList<RecipeStep> recipeSteps = recipe.getSteps();
             //Add the name to the AppBar
             if (appBarLayout != null) {
-                appBarLayout.setTitle(mItem.getName());
+
+                String addonText=getContext().getResources().getString(R.string.step);
+                appBarLayout.setTitle(recipe.getName()+" "+addonText+" "+stepId);
             }
-            View rootView = inflater.inflate(R.layout.recipe_detail_ingredients, container, false);
+            View rootView = inflater.inflate(R.layout.step_detail, container, false);
 
             // Show the dummy content as text in a TextView.
-            if (mItem != null) {
-                ArrayList<RecipeIngredient> ingredientsArray=mItem.getIngredients();
-                String mylistofIngredients="Ingredient List\n\n";
-                for(int i=0;i<ingredientsArray.size();i++){
-                    RecipeIngredient ingredient;
-                    ingredient=ingredientsArray.get(i);
-                    mylistofIngredients=mylistofIngredients+ingredient.getQuantity()+" ";
-                    mylistofIngredients=mylistofIngredients+ingredient.getMeasure()+" ";
-                    mylistofIngredients=mylistofIngredients+ingredient.getIngredient()+"\n";
-                }
-
-                ((TextView) rootView.findViewById(R.id.recipe_detail_ingredients)).setText(mylistofIngredients);
-                ((TextView) rootView.findViewById(R.id.servings)).setText("for "+ mItem.servings+" "+
-                        getActivity().getResources().getString(R.string.word_servings));
+            if (recipe != null) {
+                TextView myLongDescription=((TextView) rootView.findViewById(R.id.tv_step_description_intwopane));
+                int stepIdint=Integer.parseInt(stepId)-1;
+                //TODO bring the proper description
+                myLongDescription
+                        .setText(recipeSteps.get(stepIdint).getDescription());
             }
+
         return rootView;
     }
-
-
 }

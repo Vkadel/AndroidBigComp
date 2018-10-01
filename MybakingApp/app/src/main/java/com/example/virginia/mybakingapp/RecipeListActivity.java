@@ -1,5 +1,6 @@
 package com.example.virginia.mybakingapp;
 
+import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -35,6 +37,7 @@ public class RecipeListActivity extends AppCompatActivity {
      */
     private boolean mTwoPane;
     private ArrayList<Recipe> Recipes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,14 +49,7 @@ public class RecipeListActivity extends AppCompatActivity {
 
         //Planting a Tree
         Timber.plant(new Timber.DebugTree());
-        //TODO delete get double pane
-        /*if (findViewById(R.id.recipe_detail_container) != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-w900dp).
-            // If this view is present, then the
-            // activity should be in two-pane mode.
-            mTwoPane = true;
-        }*/
+
 
         final View recyclerView = findViewById(R.id.recipe_list);
         assert recyclerView != null;
@@ -69,8 +65,12 @@ public class RecipeListActivity extends AppCompatActivity {
                 assert recyclerView != null;
                 setupRecyclerView((RecyclerView) recyclerView,recipes);
 
+
             }
         });
+
+
+
 
     }
 
