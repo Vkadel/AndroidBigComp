@@ -31,7 +31,7 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
     private boolean mTwoPane = false;
 
     static String thisItemID;
-
+    static String thisStepID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +45,8 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        thisItemID = getIntent().getStringExtra(RecipeDetailFragment.ARG_ITEM_ID);
+        thisItemID = getIntent().getStringExtra(RecipeStepsListFragment.ARG_ITEM_ID);
+        thisStepID =getIntent().getStringExtra(RecipeStepsListFragment.ARG_ITEM_ID);
         RecipeViewModel viewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
         viewModel.getRecipes().observe(this, new Observer<ArrayList<Recipe>>() {
             @Override
@@ -55,9 +56,10 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
                     // Create the detail fragment and add it to the activity
                     // using a fragment transaction.
                     Bundle argumentsStep = new Bundle();
+
                     RecipeStepsPortraitFragment fragmentSteps = new RecipeStepsPortraitFragment();
                     argumentsStep.putString(RecipeStepsPortraitFragment.ARG_ITEM_ID, thisItemID);
-                    argumentsStep.putString(RecipeStepsPortraitFragment.ARG_STEP_ID, "1");
+                    argumentsStep.putString(RecipeStepsPortraitFragment.ARG_STEP_ID, thisStepID);
                     fragmentSteps.setArguments(argumentsStep);
                     getSupportFragmentManager().beginTransaction()
                             .add(R.id.step_detail_container_portrait, fragmentSteps).commit();
@@ -75,7 +77,7 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
            //Ensures the App goeas back to the Deatil activity on the same recipe
             Intent intent = new Intent(this, RecipeDetailActivity.class);
             intent.putExtra(RecipeDetailFragment.ARG_ITEM_ID, thisItemID);
-
+            intent.putExtra(RecipeDetailFragment.ARG_ITEM_ID, thisItemID);
             NavUtils.navigateUpTo(this, new Intent(intent));
             return true;
         }
